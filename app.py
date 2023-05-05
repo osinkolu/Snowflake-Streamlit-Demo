@@ -5,6 +5,21 @@ import seaborn as sns
 from wordcloud import WordCloud, STOPWORDS
 from PIL import Image
 import numpy as np
+import snowflake.connector
+import os
+
+
+
+conn = snowflake.connector.connect( 
+account = os.getenv('account'),
+user = os.getenv('user'),
+password = os.getenv('password'),
+role = os.getenv('role'),
+warehouse = os.getenv('warehouse'),
+database = os.getenv('database'),
+schema = os.getenv('schema'),
+#client_session_keep_alive = True
+    )
 
 st.title("Movie Ratings and Reviews :cinema:", )
 
@@ -14,13 +29,16 @@ You can even add and remove rows or columns - cool right?
 
 # streamlit_app.py
 
+
+
 import streamlit as st
 
 # Initialize connection.
-conn = st.experimental_connection('snowpark')
-
+#conn = st.experimental_connection('snowpark')
+query = 'SELECT * FROM mytable'
+orig_df = pd.read_sql(query, conn)
 # Perform query.
-orig_df = conn.query('SELECT * from mytable;', ttl=6000)
+#orig_df = conn.cursor().execute('SELECT * from mytable;')
 
 
 df = st.experimental_data_editor(orig_df,num_rows="dynamic")
@@ -41,7 +59,7 @@ design = st.selectbox("Choose wordcloud design", ["Streamlit", "Snowflake"])
 if design=="Streamlit":
     draw = "streamlit logo2.jpg"
 else:
-    draw = "snowflake.png"
+    draw = "snowflake.jpg"
 
 comment_words = ''
 stopwords = set(STOPWORDS)
