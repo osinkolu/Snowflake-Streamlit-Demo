@@ -1,0 +1,8 @@
+streamlit
+matplotlib
+pandas
+seaborn
+wordcloud
+pillow
+numpy
+snowflake-snowpark-python
